@@ -12,9 +12,9 @@ fed straight into the final "load" stage.
 
 *NOTE: a load job actually contains two files... a CSV file for the data, and a JSON file for the metadata.*
 
-**WARNING: Requires 25GB of storage space to run.**
+**WARNING #1: Requires 25GB of storage space to run.**
 
-**WARNING: Output folder will contain ~100,000 files. This may crash some IDEs, hence why the output folder isn't a 
+**WARNING #2: Output folder will contain ~100,000 files. This may crash some IDEs, hence why the output folder isn't a
 child of this project.**
 
 ## How to run
