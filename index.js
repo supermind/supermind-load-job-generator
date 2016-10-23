@@ -13,8 +13,8 @@ const rmdirAsync = Promise.promisify(rmdir);
 
 // Run the application.
 
-//const outputFolder = "/Volumes/Data (Unencrypted)/";
-const outputFolder = path.resolve(__dirname, "../supermind-load-job-mocks/");
+const outputFolder = "/Volumes/Data (Unencrypted)/data/";
+//const outputFolder = path.resolve(__dirname, "../supermind-load-job-mocks/");
 runAsync();
 
 async function runAsync(): Promise<void> {
@@ -62,16 +62,13 @@ async function generateLoadJobsAsync(): Promise<void> {
 
 
 function generateStockPrices(): Object[] {
-  // Assumes CAGR of 9.5%: 1.095^(1/(52*5))-1
-  // Note: not entirely accurate, since on average results will be less than 9.5%. This is because gains and losses of
-  // the same percentage don't compensate one-another (ie. -2% and +2% = -0.04%)
-  const dailyAverageIncrease = 0.000349116;
+  const dailyAverageIncrease = 0.01;
 
   const stockPriceDays = 40 * 52 * 7;
-  const volatilityMin = 0.015;
-  const volatilityMax = 0.05;
+  const volatilityMin = 0.005;
+  const volatilityMax = 0.035;
   const volatility = random(volatilityMin, volatilityMax);
-  let oldPrice = Math.random() * 100;
+  let oldPrice = random(20, 80);
 
   return chain(rangeRight(0, stockPriceDays)).flatMap(daysAgo => {
     const date = moment().subtract(daysAgo, 'days');
