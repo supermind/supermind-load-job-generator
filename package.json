@@ -29,9 +29,6 @@
     "bluebird": "^3.4.6",
     "lodash": "^4.16.4",
     "moment": "^2.15.1",
-    "node-uuid": "^1.4.7",
-    "request": "^2.75.0",
-    "request-promise": "^4.1.1",
     "rimraf": "^2.5.4"
   }
 }

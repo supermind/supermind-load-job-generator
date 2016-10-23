@@ -4,7 +4,6 @@ import rmdir from 'rimraf';
 import moment from 'moment';
 import Baby from "babyparse"
 import Promise from "bluebird"
-import uuid from "node-uuid"
 import { chain, random, rangeRight, round } from "lodash"
 
 // Create async versions of callback-driven methods.
@@ -14,6 +13,7 @@ const rmdirAsync = Promise.promisify(rmdir);
 
 // Run the application.
 
+//const outputFolder = "/Volumes/Data (Unencrypted)/";
 const outputFolder = path.resolve(__dirname, "../supermind-load-job-mocks/");
 runAsync();
 
@@ -32,7 +32,15 @@ async function generateLoadJobsAsync(): Promise<void> {
   const companiesCsvData = await fs.readFileAsync(companiesFile, "utf8");
   const companies = Baby.parse(companiesCsvData, {header: true}).data;
 
-  await saveJobAsync(companiesCsvData, "Company");
+  await saveJobAsync(
+    companiesCsvData,
+    "companies", {
+      nameColumn: "Company",
+      linkedColumns: {
+        "Parent Company": "companies",
+        "Industry": "industries"
+      }
+    });
 
   let index = 0;
 
@@ -41,7 +49,12 @@ async function generateLoadJobsAsync(): Promise<void> {
     const stockPrices = generateStockPrices();
     const stockPricesCsvData = Baby.unparse(stockPrices);
 
-    await saveJobAsync(stockPricesCsvData, "Stock Price", company["Company"], "Company");
+    await saveJobAsync(
+      stockPricesCsvData,
+      "stock-prices", {
+        relation: company["Company"],
+        relationTable: "companies"
+      });
   }
 
   console.log("Finished processing.");
@@ -90,23 +103,55 @@ function generateStockPrices(): Object[] {
   }).value();
 }
 
-async function saveJobAsync(csvData: string, type: string, relation: string, relationType: string): Promise<void> {
-  const hasRelation = relation !== undefined;
-  const loadJobName = (hasRelation ? `${type} (${relation})` : type) + `-${uuid.v4()}`;
+async function saveJobAsync(csvData: string, type: string, options: Object): Promise<void> {
+  const opt = options || {};
+  const hasRelation =  opt.relation !== undefined;
+  const loadJobName = hasRelation ? `${type} (${opt.relation})` : type;
   const metadataFile = loadJobName + ".json";
   const csvDataFile = loadJobName + ".csv";
+  const owner = "wagerfield";
+  const database = "finance";
+
+  if (await fileExistsAsync(csvDataFile)) {
+    throw new Error(`Cannot save duplicate job "${loadJobName}".`)
+  }
 
   await saveFileAsync(csvData, csvDataFile);
 
-  const metadata = { type: type };
+  const metadata = {
+    owner: owner,
+    database: database,
+    table: type
+  };
+
   if (hasRelation) {
-    metadata.relation = relation;
-    metadata.relationType = relationType;
+    metadata.relation = opt.relation;
+    metadata.relationTable = opt.relationTable;
+  }
+
+  if (options.nameColumn) {
+    metadata.nameColumn = options.nameColumn;
+  }
+
+  if (options.linkedColumns) {
+    metadata.linkedColumns = options.linkedColumns;
   }
 
   await saveFileAsync(JSON.stringify(metadata), metadataFile);
 }
 
-async function saveFileAsync(content: string, relativeFilePath: string): Promise<void> {
+function saveFileAsync(content: string, relativeFilePath: string): Promise<void> {
   return fs.writeFileAsync(path.resolve(outputFolder, relativeFilePath), content, "utf8");
+}
+
+async function fileExistsAsync(relativeFilePath: string): Promise<boolean> {
+  let exists = true;
+  try {
+    await fs.statAsync(path.resolve(outputFolder, relativeFilePath));
+  }
+  catch(err) {
+    exists = false;
+  }
+
+  return exists;
 }
