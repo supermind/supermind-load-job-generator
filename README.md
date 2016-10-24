@@ -15,7 +15,7 @@ fed straight into the final "load" stage.
 **WARNING #1:** Requires 25GB of storage space to run.
 
 **WARNING #2:** Output folder will contain ~100,000 files. This may crash some IDEs, hence why the output folder isn't a
-child of this project.
+child of this project. *We strongly recommend using the terminal to interact with this folder.*
 
 ## How to run
 

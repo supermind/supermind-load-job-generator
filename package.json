@@ -2,10 +2,10 @@
   "name": "supermind-load-job-generator",
   "version": "1.0.0",
   "description": "Generates a large dummy set of Supermind Load Jobs.",
-  "main": "index.js",
+  "main": "source/index.js",
   "license": "private",
   "scripts": {
-    "start": "node -r babel-register -r babel-regenerator-runtime index.js"
+    "start": "node -r babel-register -r babel-regenerator-runtime source/index.js"
   },
   "babel": {
     "plugins": [
