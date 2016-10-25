@@ -5,7 +5,7 @@ import Promise from "bluebird"
 import { chain, random, rangeRight, round } from "lodash"
 import Utils from "../Utils.js"
 
-export default class StocksAndCompanies {
+export default class CompaniesAndStocks {
   utils: Utils;
 
   constructor(utils: Utils) {

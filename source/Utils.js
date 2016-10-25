@@ -24,7 +24,7 @@ export default class Utils {
     const loadJobName = hasRelation ? `${type} (${opt.relation})` : type;
     const metadataFile = loadJobName + ".json";
     const csvDataFile = loadJobName + ".csv";
-    const owner = "buffett";
+    const owner = "graham";
     const database = "finance";
 
     if (await this.fileExistsAsync(csvDataFile)) {
