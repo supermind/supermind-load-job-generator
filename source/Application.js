@@ -12,7 +12,7 @@ export default class Application {
   }
 
   async runAsync(): Promise<void> {
-    await this.utils.prepareOutputFolderAsync();
+    // await this.utils.prepareOutputFolderAsync();
     await this.generator.createJobFilesAsync();
     console.log("Finished processing.");
   }

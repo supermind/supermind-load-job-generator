@@ -2,7 +2,6 @@ import Baby from "babyparse"
 import Promise from "bluebird"
 import { chain, random, range, round, map, forEach } from "lodash"
 import Utils from "../Utils.js"
-import uuid from "node-uuid"
 
 export default class RandomTables {
   utils: Utils;
@@ -19,7 +18,7 @@ export default class RandomTables {
       console.log(`${round((i / userCount) * 100)}% Random #${i} of ${userCount}`);
 
       let linkedColumns = {};
-      let columns = map(range(0, random(3, 10)), _ => "Column " + random(100, 999));
+      let columns = map(range(0, random(2, 5)), _ => "Column " + random(100, 999));
       chain(columns)
         .filter(_ => Math.random() < 0.3)
         .forEach(c => linkedColumns[c] = "some-table-" + random(100, 999))
@@ -41,7 +40,7 @@ export default class RandomTables {
   generateRandomRows(rowCount: number, columns: string[]): Object[] {
     return chain(range(0, rowCount)).map(_ => {
       const row = {};
-      forEach(columns, c => row[c] = uuid.v4());
+      forEach(columns, c => row[c] = random(0, 9));
       return row;
     }).value();
   }
