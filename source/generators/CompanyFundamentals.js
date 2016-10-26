@@ -23,6 +23,8 @@ export default class CompanyFundamentals {
     let index = 0;
 
     for (const company of companies) {
+      if (company === undefined || company["Company"].length === 0) continue;
+
       console.log(`Company #${++index} of ${companies.length}`);
 
       const income = this.generateIncomeStatements();

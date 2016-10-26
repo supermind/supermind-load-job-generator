@@ -18,18 +18,18 @@ export default class Utils {
     await fs.mkdirAsync(this.outputFolder, 0o777);
   }
 
-  async saveJobAsync(csvData: string, type: string, options: Object): Promise<void> {
+  async saveJobAsync(owner: string, database: string, type: string, options: Object, getCsvData: () => string): Promise<void> {
     const opt = options || {};
     const hasRelation =  opt.relation !== undefined;
-    const loadJobName = hasRelation ? `${type} (${opt.relation})` : type;
+    const loadJobName = hasRelation ? `${type} (${opt.relation.replace(/\//g, ',')})` : type;
     const metadataFile = loadJobName + ".json";
     const csvDataFile = loadJobName + ".csv";
-    const owner = "graham";
-    const database = "finance";
 
-    if (await this.fileExistsAsync(csvDataFile)) {
-      throw new Error(`Cannot save duplicate job "${loadJobName}".`)
+    if (await this.fileExistsAsync(metadataFile)) {
+      return;
     }
+
+    const csvData = getCsvData();
 
     await this.saveFileAsync(csvData, csvDataFile);
 

@@ -1,10 +1,10 @@
 import fs from "fs"
 import Baby from "babyparse"
 import Promise from "bluebird"
-import { uniqBy } from "lodash"
+import { chain, uniqBy } from "lodash"
 import Utils from "../Utils.js"
 
-export default class CompaniesAndStocks {
+export default class HackPad {
   utils: Utils;
 
   constructor(utils: Utils) {
@@ -12,14 +12,14 @@ export default class CompaniesAndStocks {
   }
 
   async createJobFilesAsync(): Promise<void> {
-    const companiesFile = "/Users/lawrencewagerfield/Downloads/Company Cities.csv";
-    const companiesCsvData = await fs.readFileAsync(companiesFile, "utf8");
-    const companies = Baby.parse(companiesCsvData, {header: true}).data;
+    const file = "input/People-100000.csv";
+    const csvData = await fs.readFileAsync(file, "utf8");
+    const rows = Baby.parse(csvData, {header: true}).data;
 
-    const uniqueCompanies = uniqBy(companies, e => e["Company"]);
+    const uniqueRows = uniqBy(rows, e => e["Full Name"]);
 
-    const output = Baby.unparse(uniqueCompanies);
+    const output = Baby.unparse(uniqueRows);
 
-    await fs.writeFileAsync("/Users/lawrencewagerfield/Downloads/Company Cities (Unique).csv", output, "utf8");
+    await fs.writeFileAsync("input/People (Unique).csv", output, "utf8");
   }
 }

@@ -30,6 +30,8 @@ export default class CompaniesAndStocks {
     let index = 0;
 
     for (const company of companies) {
+      if (company === undefined || company["Company"].length === 0) continue;
+
       console.log(`Company #${++index} of ${companies.length}`);
       const stockPrices = this.generateStockPrices();
       const stockPricesCsvData = Baby.unparse(stockPrices);
